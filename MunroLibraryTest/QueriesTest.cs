@@ -45,8 +45,8 @@ namespace MunroLibraryTest
             };
 
 
-            TestMunroData = TestParcer.PopulateDataToObject(TestHeaderList, TestDataList);
-            TestMunroData2 = TestParcer.PopulateDataToObject(TestHeaderList, TestDataList2);
+            TestMunroData = TestParcer.PopulateDataToObject(TestHeaderList, TestDataList).MunroList;
+            TestMunroData2 = TestParcer.PopulateDataToObject(TestHeaderList, TestDataList2).MunroList;
 
             emptyList = new List<Munro>();
         }
@@ -61,8 +61,8 @@ namespace MunroLibraryTest
             var query = new MunroQueries();
             var result = query.SortByCategory(null, MunroLibrary.Enums.HillCategory.Munro);
             //Assert
-            Assert.Null(result);
-           
+            Assert.Null(result.MunroList);
+            Assert.NotEmpty(result.Error);
         }
 
         [Fact]

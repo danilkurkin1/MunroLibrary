@@ -15,8 +15,9 @@ namespace MunroLibrary
 
        
 
-        public void ParseCSVFile(string pathToTheFile)
+        public string ParseCSVFile(string pathToTheFile)
         {
+            string error = "";
             try
             {
                 HeaderList = new List<string>();
@@ -45,11 +46,14 @@ namespace MunroLibrary
             {
                 Debug.WriteLine("Exception:" + ex.Message);
                 Debug.WriteLine("Exception:" + ex.StackTrace);
+                error = ex.Message;
             }
+            return error;
         }
 
-        public List<Munro> PopulateDataToObject(List<string> headerList , List<string[]> dataList)
+        public MunroFiltteringResult PopulateDataToObject(List<string> headerList , List<string[]> dataList)
         {
+            var results = new MunroFiltteringResult();
             
             MunroData = new List<Munro>();
             var tempIndexHolder = new int[4];
@@ -81,16 +85,17 @@ namespace MunroLibrary
                     MunroData.Add(munroObject);
                 }
 
-                return MunroData;
+                results.MunroList = MunroData;
+               
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Convert Exception:" + ex.Message);
                 Debug.WriteLine("Convert Exception:" + ex.StackTrace);
-                return null;
+                results.Error = ex.Message;
             }
 
-           
+            return results;
         }
 
     }

@@ -33,9 +33,10 @@ namespace MunroLibraryTest
             string path = Path.Combine(Environment.CurrentDirectory, @"Resources\", fileName);
 
             //Act 
-            TestParcer.ParseCSVFile(path);
+            var result = TestParcer.ParseCSVFile(path);
 
             //Assert
+            Assert.Empty(result);
             Assert.NotNull(TestParcer.HeaderList);
             Assert.NotNull(TestParcer.DataList);
             Assert.Equal("Running No", TestParcer.HeaderList[0]);
@@ -54,9 +55,10 @@ namespace MunroLibraryTest
 
             //Act 
 
-            TestParcer.ParseCSVFile(path);
+            var result =  TestParcer.ParseCSVFile(path);
 
             //Assert
+            Assert.NotEmpty(result);
             Assert.NotNull(TestParcer.HeaderList);
             Assert.NotNull(TestParcer.DataList);
             Assert.Empty(TestParcer.HeaderList);
@@ -76,9 +78,10 @@ namespace MunroLibraryTest
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(3, result.Count);
-            Assert.Equal(10, result[0].Height);
-            Assert.Equal("C", result[2].Name);
+            Assert.Null(result.Error);
+            Assert.Equal(3, result.MunroList.Count);
+            Assert.Equal(10, result.MunroList[0].Height);
+            Assert.Equal("C", result.MunroList[2].Name);
         }
 
         [Fact]
@@ -94,7 +97,8 @@ namespace MunroLibraryTest
             var result = TestParcer.PopulateDataToObject(testHeaderList, testDataList);
 
             //Assert
-            Assert.Null(result);
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.Error);
         }
 
 
