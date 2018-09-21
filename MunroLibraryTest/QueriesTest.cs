@@ -75,7 +75,7 @@ namespace MunroLibraryTest
             var query = new MunroQueries();
             var result = query.SortByCategory(new List<Munro>(), MunroLibrary.Enums.HillCategory.Munro);
             //Assert
-            Assert.Null(result);
+            Assert.NotEmpty(result.Error);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace MunroLibraryTest
             var result = query.SortByCategory(TestMunroData, MunroLibrary.Enums.HillCategory.Munro);
 
             var haveOtherCategories = 0;
-            foreach (var element in result)
+            foreach (var element in result.MunroList)
             {
                 if (!element.Category.Equals("MUN"))
                 {
@@ -98,8 +98,8 @@ namespace MunroLibraryTest
             }
 
             //Assert
-            Assert.NotNull(result);
-            Assert.Equal("MUN", result[0].Category);
+            Assert.NotNull(result.MunroList);
+            Assert.Equal("MUN", result.MunroList[0].Category);
             Assert.Equal(0, haveOtherCategories);
         }
 
@@ -114,7 +114,7 @@ namespace MunroLibraryTest
             var result = query.SortByCategory(TestMunroData, MunroLibrary.Enums.HillCategory.MunroTop);
 
             var haveOtherCategories = 0;
-            foreach (var element in result)
+            foreach (var element in result.MunroList)
             {
                
                 if (!element.Category.Equals("TOP"))
@@ -124,7 +124,7 @@ namespace MunroLibraryTest
             }
 
             //Assert
-            Assert.NotNull(result);
+            Assert.NotNull(result.MunroList);
             Assert.Equal(0, haveOtherCategories);
         }
 
@@ -139,7 +139,7 @@ namespace MunroLibraryTest
             var result = query.SortByCategory(TestMunroData, MunroLibrary.Enums.HillCategory.Ether);
 
             var haveEmptyField = 0;
-            foreach (var element in result)
+            foreach (var element in result.MunroList)
             {
                 if (element.Category.Length == 0)
                 {
@@ -148,7 +148,7 @@ namespace MunroLibraryTest
             }
 
             //Assert
-            Assert.NotNull(result);
+            Assert.NotNull(result.MunroList);
             Assert.Equal(0, haveEmptyField);
         }
 
@@ -164,7 +164,8 @@ namespace MunroLibraryTest
             var result = query.SortByHeighAndAlphabet(null, true, false, true);
 
             //Assert
-            Assert.Null(result);
+            Assert.NotNull(result);
+            Assert.Equal("list of Data is null or Empty", result.Error);
         }
 
 
@@ -180,8 +181,8 @@ namespace MunroLibraryTest
             
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(34, result[0].Height);
-            Assert.Equal(91, result[2].Height);
+            Assert.Equal(34, result.MunroList[0].Height);
+            Assert.Equal(91, result.MunroList[2].Height);
         }
 
         [Fact]
@@ -196,8 +197,8 @@ namespace MunroLibraryTest
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(91, result[0].Height);
-            Assert.Equal(34, result[2].Height);
+            Assert.Equal(91, result.MunroList[0].Height);
+            Assert.Equal(34, result.MunroList[2].Height);
         }
 
         [Fact]
@@ -212,8 +213,8 @@ namespace MunroLibraryTest
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal("A", result[0].Name);
-            Assert.Equal("C", result[2].Name);
+            Assert.Equal("A", result.MunroList[0].Name);
+            Assert.Equal("C", result.MunroList[2].Name);
         }
 
         [Fact]
@@ -228,8 +229,8 @@ namespace MunroLibraryTest
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal("C", result[0].Name);
-            Assert.Equal("A", result[2].Name);
+            Assert.Equal("C", result.MunroList[0].Name);
+            Assert.Equal("A", result.MunroList[2].Name);
         }
 
 
@@ -246,12 +247,12 @@ namespace MunroLibraryTest
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal("A", result[0].Name);
-            Assert.Equal("A", result[1].Name);
-            Assert.Equal("A", result[2].Name);
-            Assert.Equal(36, result[0].Height);
-            Assert.Equal(66, result[1].Height);
-            Assert.Equal(68, result[2].Height);
+            Assert.Equal("A", result.MunroList[0].Name);
+            Assert.Equal("A", result.MunroList[1].Name);
+            Assert.Equal("A", result.MunroList[2].Name);
+            Assert.Equal(36, result.MunroList[0].Height);
+            Assert.Equal(66, result.MunroList[1].Height);
+            Assert.Equal(68, result.MunroList[2].Height);
           
         }
 
@@ -268,7 +269,7 @@ namespace MunroLibraryTest
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(numberOfResults, result.Count);
+            Assert.Equal(numberOfResults, result.MunroList.Count);
         }
 
         [Fact]
@@ -284,7 +285,7 @@ namespace MunroLibraryTest
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(numberOfResults, result.Count);
+            Assert.Equal(numberOfResults, result.MunroList.Count);
         }
 
 
@@ -301,7 +302,7 @@ namespace MunroLibraryTest
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(numberOfResults, result.Count);
+            Assert.Equal(numberOfResults, result.MunroList.Count);
         }
 
         [Fact]
@@ -317,7 +318,7 @@ namespace MunroLibraryTest
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(numberOfResults, result.Count);
+            Assert.Equal(numberOfResults, result.MunroList.Count);
         }
 
         [Fact]
@@ -333,8 +334,25 @@ namespace MunroLibraryTest
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(numberOfResults, result.Count);
+            Assert.Equal(numberOfResults, result.MunroList.Count);
         }
+
+        [Fact]
+        public void GetResultsMinBiggerMax()
+        {
+            //Arrange
+            InitParcer();
+            var numberOfResults = 4;
+
+            //Act 
+            var query = new MunroQueries();
+            var result = query.SortByHeighAndAlphabet(TestMunroData2, false, false, false, 0, 60, 30);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal("Minimum cannot be larger than maximum", result.Error);
+        }
+
 
     }
 }

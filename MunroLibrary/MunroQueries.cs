@@ -9,8 +9,10 @@ namespace MunroLibrary
 {
     public class MunroQueries
     {
-        public List<Munro> SortByCategory(List<Munro> munroData, HillCategory hillCategory)
+        public MunroFiltteringResult SortByCategory(List<Munro> munroData, HillCategory hillCategory)
         {
+            var result = new MunroFiltteringResult();
+
             if (munroData?.Count > 0)
             {
 
@@ -18,56 +20,65 @@ namespace MunroLibrary
                 {
                     case HillCategory.Munro:
                     {
-                        return munroData.Where(element => element.Category.Equals("MUN")).ToList();
+                        result.MunroList = munroData.Where(element => element.Category.Equals("MUN")).ToList();
                         break;
                     }
                     case HillCategory.MunroTop:
                     {
-                        return munroData.Where(element => element.Category.Equals("TOP")).ToList();
+                        result.MunroList = munroData.Where(element => element.Category.Equals("TOP")).ToList();
+                      
                         break;
                     }
                     default:
                     {
-                        return munroData.Where(element => element.Category.Length > 0).ToList();
+                        result.MunroList = munroData.Where(element => element.Category.Length > 0).ToList();
                         break;
                     }
                 }
             }
             else
             {
-                return null;
+                result.Error = "list of Data is null or Empty";
             }
+            return result;
         }
 
-        public List<Munro> SortByHeighAndAlphabet(List<Munro> munroData, bool height , bool alphabeth, bool ascending, int resultsNumber = 0, int min = 0 , int max = 0)
+        public MunroFiltteringResult SortByHeighAndAlphabet(List<Munro> munroData, bool height , bool alphabeth, bool ascending, int resultsNumber = 0, int min = 0 , int max = 0)
         {
+            var result = new MunroFiltteringResult();
+
             if (munroData != null && munroData.Count > 0)
             {
                 var returnResult = new List<Munro>();
                 //query to sort my height
                 if (min == 0 && max == 0)
                 {
-                    return simpleQueries(munroData, height, alphabeth, ascending, resultsNumber);
+                    result.MunroList =  simpleQueries(munroData, height, alphabeth, ascending, resultsNumber);
                 }
                 else
                 {
                     if (min > max && max > 0)
-                        return returnResult;
-                    if(min > 0)
+                    {
+                        result.Error = "Minimum cannot be larger than maximum";
+                        return result;
+                    }
+                    if (min > 0)
                         returnResult = munroData.Where(munro => munro.Height > min).ToList();
                     if (max > 0)
                         returnResult = munroData.Where(munro => munro.Height < max).ToList();
                     if (min > 0 && max > 0)
                         returnResult = munroData.Where(munro => munro.Height > min && munro.Height < max).ToList();
 
-                    return simpleQueries(returnResult, height, alphabeth, ascending, resultsNumber);
+                    result.MunroList = simpleQueries(returnResult, height, alphabeth, ascending, resultsNumber);
                 }
 
             }
             else
             {
-                return null;
+                result.Error = "list of Data is null or Empty";
             }
+
+            return result;
         }
 
         private List<Munro> simpleQueries(List<Munro> munroData, bool height, bool alphabeth, bool ascending, int resultsNumber = 0)
