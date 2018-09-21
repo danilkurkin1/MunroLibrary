@@ -39,5 +39,44 @@ namespace MunroLibrary
             }
         }
 
+        public List<Munro> SortByHeighAndAlphabet(List<Munro> munroData, bool height , bool alphabeth, bool ascending)
+        {
+            if (munroData != null && munroData.Count > 0)
+            {
+                //query to sort my height
+                var returnResult = new List<Munro>();
+
+              
+                if (height && ascending)
+                    returnResult = munroData.OrderBy(munro => munro.Height).ToList(); 
+
+                if (alphabeth && ascending)
+                    returnResult = munroData.OrderBy(munro => munro.Name).ToList();
+
+                if (height && !ascending)
+                    returnResult = munroData.OrderByDescending(munro => munro.Height).ToList();
+
+                if (alphabeth && !ascending)
+                    returnResult = munroData.OrderByDescending(munro => munro.Name).ToList();
+
+                if (height && alphabeth && ascending)
+                {
+                    returnResult = munroData.OrderBy(h => h.Name).ThenBy(h => h.Height).ToList();
+                }
+
+                if (height && alphabeth && !ascending)
+                {
+                    returnResult = munroData.OrderByDescending(h => h.Height).ThenBy(n => n.Name).ToList();
+                }
+
+
+                return returnResult;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
     }
 }
