@@ -252,9 +252,89 @@ namespace MunroLibraryTest
             Assert.Equal(36, result[0].Height);
             Assert.Equal(66, result[1].Height);
             Assert.Equal(68, result[2].Height);
-
+          
         }
 
+        [Fact]
+        public void GetLimitResults2()
+        {
+            //Arrange
+            InitParcer();
+            var numberOfResults = 2;
+
+            //Act 
+            var query = new MunroQueries();
+            var result = query.SortByHeighAndAlphabet(TestMunroData2, true, true, true, numberOfResults);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(numberOfResults, result.Count);
+        }
+
+        [Fact]
+        public void GetLimitResultsNotSet()
+        {
+            //Arrange
+            InitParcer();
+            var numberOfResults = TestMunroData2.Count;
+
+            //Act 
+            var query = new MunroQueries();
+            var result = query.SortByHeighAndAlphabet(TestMunroData2, true, true, true);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(numberOfResults, result.Count);
+        }
+
+
+        [Fact]
+        public void GetResultsBetweenMaxAndMin()
+        {
+            //Arrange
+            InitParcer();
+            var numberOfResults = 4;
+
+            //Act 
+            var query = new MunroQueries();
+            var result = query.SortByHeighAndAlphabet(TestMunroData2, false, false, false, 0, 30, 90);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(numberOfResults, result.Count);
+        }
+
+        [Fact]
+        public void GetResultsExcludingMin()
+        {
+            //Arrange
+            InitParcer();
+            var numberOfResults = 5;
+
+            //Act 
+            var query = new MunroQueries();
+            var result = query.SortByHeighAndAlphabet(TestMunroData2, false, false, false, 0, 40);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(numberOfResults, result.Count);
+        }
+
+        [Fact]
+        public void GetResultsExcludingMax()
+        {
+            //Arrange
+            InitParcer();
+            var numberOfResults = 4;
+
+            //Act 
+            var query = new MunroQueries();
+            var result = query.SortByHeighAndAlphabet(TestMunroData2, false, false, false, 0, 0, 90);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(numberOfResults, result.Count);
+        }
 
     }
 }

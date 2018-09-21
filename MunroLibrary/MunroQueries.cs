@@ -39,38 +39,30 @@ namespace MunroLibrary
             }
         }
 
-        public List<Munro> SortByHeighAndAlphabet(List<Munro> munroData, bool height , bool alphabeth, bool ascending)
+        public List<Munro> SortByHeighAndAlphabet(List<Munro> munroData, bool height , bool alphabeth, bool ascending, int resultsNumber = 0, int min = 0 , int max = 0)
         {
             if (munroData != null && munroData.Count > 0)
             {
-                //query to sort my height
                 var returnResult = new List<Munro>();
-
-              
-                if (height && ascending)
-                    returnResult = munroData.OrderBy(munro => munro.Height).ToList(); 
-
-                if (alphabeth && ascending)
-                    returnResult = munroData.OrderBy(munro => munro.Name).ToList();
-
-                if (height && !ascending)
-                    returnResult = munroData.OrderByDescending(munro => munro.Height).ToList();
-
-                if (alphabeth && !ascending)
-                    returnResult = munroData.OrderByDescending(munro => munro.Name).ToList();
-
-                if (height && alphabeth && ascending)
+                //query to sort my height
+                if (min == 0 && max == 0)
                 {
-                    returnResult = munroData.OrderBy(h => h.Name).ThenBy(h => h.Height).ToList();
+                    return simpleQueries(munroData, height, alphabeth, ascending, resultsNumber);
+                }
+                else
+                {
+                    if (min > max && max > 0)
+                        return returnResult;
+                    if(min > 0)
+                        returnResult = munroData.Where(munro => munro.Height > min).ToList();
+                    if (max > 0)
+                        returnResult = munroData.Where(munro => munro.Height < max).ToList();
+                    if (min > 0 && max > 0)
+                        returnResult = munroData.Where(munro => munro.Height > min && munro.Height < max).ToList();
+
+                    return simpleQueries(returnResult, height, alphabeth, ascending, resultsNumber);
                 }
 
-                if (height && alphabeth && !ascending)
-                {
-                    returnResult = munroData.OrderByDescending(h => h.Height).ThenBy(n => n.Name).ToList();
-                }
-
-
-                return returnResult;
             }
             else
             {
@@ -78,5 +70,43 @@ namespace MunroLibrary
             }
         }
 
+        private List<Munro> simpleQueries(List<Munro> munroData, bool height, bool alphabeth, bool ascending, int resultsNumber = 0)
+        {
+            var returnResult = munroData;
+            var takeResults = munroData.Count;
+            if (resultsNumber != 0)
+                takeResults = resultsNumber;
+           
+            if (height && ascending)
+            {
+                returnResult = munroData.OrderBy(munro => munro.Height).Take(takeResults).ToList();
+            }
+            if (alphabeth && ascending)
+            {
+                returnResult = munroData.OrderBy(munro => munro.Name).Take(takeResults).ToList();
+            }
+            if (height && !ascending)
+            {
+                returnResult = munroData.OrderByDescending(munro => munro.Height).Take(takeResults).ToList();
+            }
+            if (alphabeth && !ascending)
+            {
+                returnResult = munroData.OrderByDescending(munro => munro.Name).Take(takeResults).ToList();
+            }
+            if (height && alphabeth && ascending)
+            {
+                returnResult = munroData.OrderBy(h => h.Name).ThenBy(h => h.Height).Take(takeResults).ToList();
+            }
+
+            if (height && alphabeth && !ascending)
+            {
+                returnResult = munroData.OrderByDescending(h => h.Height).ThenBy(n => n.Name).Take(takeResults).ToList();
+            }
+
+            return returnResult;
+        }
+
     }
+
+    
 }
