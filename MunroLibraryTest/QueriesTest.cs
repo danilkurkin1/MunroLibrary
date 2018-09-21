@@ -15,7 +15,7 @@ namespace MunroLibraryTest
         {
             string fileName = "test.csv";
             string path = Path.Combine(Environment.CurrentDirectory, @"Resources\", fileName);
-            TestParcer = new CSVParcer(path);
+            TestParcer = new CSVParcer();
         }
 
         [Fact]
